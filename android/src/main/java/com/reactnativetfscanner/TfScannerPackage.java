@@ -17,6 +17,6 @@ public class TfScannerPackage implements ReactPackage {
 
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        return Arrays.<ViewManager>asList(new TfScannerViewManager());
+        return Arrays.<ViewManager>asList(new TfScannerViewManager(reactContext));
     }
 }

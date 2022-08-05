@@ -1,12 +1,31 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
 
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, PermissionsAndroid } from 'react-native';
 import { TfScannerView } from 'react-native-tf-scanner';
 
 export default function App() {
+
+  const [hasPermission, setHasPermission] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const grantedCamera = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA
+      );
+      setHasPermission(
+        grantedCamera === PermissionsAndroid.RESULTS.GRANTED
+      );    
+    })();
+  }, []);
+
   return (
     <View style={styles.container}>
-      <TfScannerView color="#32a852" style={styles.box} />
+      {hasPermission && <TfScannerView
+      style={styles.box}
+      modelPath={"vehicles/model_with_metadata.tflite"}
+      detectionThreshold={0.5}
+      currentDelegate={"DELEGATE_GPU"}
+      />}
     </View>
   );
 }
@@ -16,10 +35,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: "#ff0000",
   },
   box: {
-    width: 60,
-    height: 60,
     marginVertical: 20,
+    width: 350,
+    height: 500,
   },
 });

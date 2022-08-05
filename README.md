@@ -1,5 +1,9 @@
 # react-native-tf-scanner
-Camera view to scan using a tensorflow model
+Camera view to scan using a tensorflow lite model
+
+This is a basework for hopefully a future npm package.
+
+For the moment, only the Android code has been done.
 ## Installation
 
 ```sh
