@@ -13,12 +13,9 @@ npm install react-native-tf-scanner
 ## Usage
 
 ```js
-
 // ...
 import { TfScannerView } from "react-native-tf-scanner";
 
-// ...
-```
 const [hasPermission, setHasPermission] = useState(null);
 
   useEffect(() => {
@@ -42,7 +39,9 @@ const [hasPermission, setHasPermission] = useState(null);
       />}
     </View>
   );
-  ```
+
+// ...
+```
 
 ## Contributing
 
