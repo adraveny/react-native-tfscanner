@@ -1,7 +1,7 @@
 # react-native-tf-scanner
 Camera view to scan using a tensorflow lite model
 
-This is a basework for hopefully a future npm package.
+This is a basework for a npm package.
 
 For the moment, only the Android code has been done.
 ## Installation
@@ -13,12 +13,35 @@ npm install react-native-tf-scanner
 ## Usage
 
 ```js
+
+// ...
 import { TfScannerView } from "react-native-tf-scanner";
 
 // ...
 
-<TfScannerView color="tomato" />
-```
+const [hasPermission, setHasPermission] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const grantedCamera = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA
+      );
+      setHasPermission(
+        grantedCamera === PermissionsAndroid.RESULTS.GRANTED
+      );    
+    })();
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      {hasPermission && <TfScannerView
+      style={styles.box}
+      modelPath={"vehicles/model_with_metadata.tflite"}
+      detectionThreshold={0.5}
+      currentDelegate={"DELEGATE_GPU"}
+      />}
+    </View>
+  );```
 
 ## Contributing
 
