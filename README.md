@@ -18,7 +18,7 @@ npm install react-native-tf-scanner
 import { TfScannerView } from "react-native-tf-scanner";
 
 // ...
-
+```
 const [hasPermission, setHasPermission] = useState(null);
 
   useEffect(() => {
@@ -41,7 +41,8 @@ const [hasPermission, setHasPermission] = useState(null);
       currentDelegate={"DELEGATE_GPU"}
       />}
     </View>
-  );```
+  );
+  ```
 
 ## Contributing
 
