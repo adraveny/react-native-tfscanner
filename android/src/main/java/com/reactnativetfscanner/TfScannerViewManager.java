@@ -34,6 +34,7 @@ public class TfScannerViewManager extends ViewGroupManager<FrameLayout> {
   public TfScannerViewManager(ReactApplicationContext reactContext) {
     this.reactContext = reactContext;
     analyzerOptions = new TfScannerImageAnalyzerOptions();
+    analyzerOptions.setReactContext(reactContext);
     overlayViewParams = new OverlayView.OverlayViewParams();
   }
 

@@ -1,11 +1,14 @@
 package com.reactnativetfscanner;
 
+import com.facebook.react.bridge.ReactContext;
+
 public class TfScannerImageAnalyzerOptions {
   private float threshold = 0.50f;
   private int maxResults = 3;
   private int numThreads = 2;
   private String currentDelegate = TfScannerImageAnalyzer.DELEGATE_CPU;
   private String modelPath;
+  private ReactContext reactContext = null;
 
   public TfScannerImageAnalyzerOptions setNumThreads(int numThreads) {
     this.numThreads = numThreads;
@@ -32,6 +35,11 @@ public class TfScannerImageAnalyzerOptions {
     return this;
   }
 
+  public TfScannerImageAnalyzerOptions setReactContext(ReactContext reactContext) {
+    this.reactContext = reactContext;
+    return this;
+  }
+
   public float getThreshold() {
     return threshold;
   }
@@ -51,4 +59,6 @@ public class TfScannerImageAnalyzerOptions {
   public String getModelPath() {
     return modelPath;
   }
+
+  public ReactContext getReactContext() { return reactContext; }
 }

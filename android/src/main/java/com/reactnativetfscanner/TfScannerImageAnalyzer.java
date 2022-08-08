@@ -10,6 +10,15 @@ import android.util.Log;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
 
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableNativeArray;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
+
 import org.tensorflow.lite.gpu.CompatibilityList;
 import org.tensorflow.lite.support.image.ImageProcessor;
 import org.tensorflow.lite.support.image.TensorImage;
@@ -40,6 +49,7 @@ public class TfScannerImageAnalyzer implements ImageAnalysis.Analyzer {
 
   private ObjectDetector objectDetector = null;
 
+  private ReactContext reactContext = null;
 
   public TfScannerImageAnalyzer(Context context, OverlayView overlayView) {
     super();
@@ -71,6 +81,10 @@ public class TfScannerImageAnalyzer implements ImageAnalysis.Analyzer {
   public void setModelPath(String modelPath) {
     this.modelPath = modelPath;
     resetObjectDetector();
+  }
+
+  public void setReactContext(ReactContext reactContext) {
+    this.reactContext = reactContext;
   }
 
   @SuppressLint("UnsafeOptInUsageError")
@@ -113,6 +127,9 @@ public class TfScannerImageAnalyzer implements ImageAnalysis.Analyzer {
         }
       }
     }
+
+    emitReactDetectionEvent(filteredDetections);
+
     mOverlayView.setResults(filteredDetections, tensorImage.getHeight(), tensorImage.getWidth());
     mOverlayView.invalidate();
 
@@ -156,4 +173,37 @@ public class TfScannerImageAnalyzer implements ImageAnalysis.Analyzer {
     }
     setupObjectDetector();
   }
+
+  public void emitReactDetectionEvent(List<Detection> detections) {
+    if(reactContext == null || detections.size() == 0) {
+      return;
+    }
+
+    WritableNativeArray detectionsArray = new WritableNativeArray();
+
+    for(Detection detection: detections) {
+      RectF boundingBox = detection.getBoundingBox();
+      for(Category category: detection.getCategories()) {
+        WritableMap detectionMap = new WritableNativeMap();
+
+        detectionMap.putString("category", category.getLabel());
+        detectionMap.putDouble("score", (double) category.getScore());
+
+        WritableMap detectionBoundingBoxMap = new WritableNativeMap();
+        detectionBoundingBoxMap.putDouble("top", boundingBox.top);
+        detectionBoundingBoxMap.putDouble("bottom", boundingBox.bottom);
+        detectionBoundingBoxMap.putDouble("left", boundingBox.left);
+        detectionBoundingBoxMap.putDouble("right", boundingBox.right);
+
+        detectionMap.putMap("boundingBox", detectionBoundingBoxMap);
+
+        detectionsArray.pushMap(detectionMap);
+      }
+    }
+
+    reactContext
+      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+      .emit("onObjectDetected", detectionsArray);
+  }
+
 }

@@ -2,6 +2,8 @@ package com.reactnativetfscanner;
 
 import android.content.Context;
 
+import com.facebook.react.bridge.ReactContext;
+
 public class TfScannerImageAnalyzerBuilder {
   private TfScannerImageAnalyzer tfScannerImageAnalyzer;
   public TfScannerImageAnalyzerBuilder(Context context, OverlayView overlayView) {
@@ -39,6 +41,11 @@ public class TfScannerImageAnalyzerBuilder {
     return this;
   }
 
+  public  TfScannerImageAnalyzerBuilder setReactContext(ReactContext reactContext) {
+    tfScannerImageAnalyzer.setReactContext(reactContext);
+    return this;
+  }
+
   public static TfScannerImageAnalyzerBuilder fromOptions(TfScannerImageAnalyzerOptions options,
                                                           Context context,
                                                           OverlayView overlayView) {
@@ -47,6 +54,7 @@ public class TfScannerImageAnalyzerBuilder {
       .setNumThreads(options.getNumThreads())
       .setThreshold(options.getThreshold())
       .setMaxResults(options.getMaxResults())
-      .setCurrentDelegate(options.getCurrentDelegate());
+      .setCurrentDelegate(options.getCurrentDelegate())
+      .setReactContext(options.getReactContext());
   }
 }

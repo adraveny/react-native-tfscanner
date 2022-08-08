@@ -36,6 +36,7 @@ const [hasPermission, setHasPermission] = useState(null);
       modelPath={"vehicles/model_with_metadata.tflite"}
       detectionThreshold={0.5}
       currentDelegate={"DELEGATE_GPU"}
+      onObjectDetected={(event) => console.log(event)}
       />}
     </View>
   );
